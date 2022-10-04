@@ -32,15 +32,19 @@ class Event {
     }
 
     static isStarted(event) {
-        return event && event.start >= new Date();
+        return event && new Date().getTime() >= event.start.getTime();
     }
 
     static isEnded(event) {
-        return event && event.end >= new Date();
+        return event && new Date().getTime() >= event.end.getTime();
     }
 
     static isValid(event) {
-        return event && event.start >= new Date() && event.end <= new Date();
+        return event && Event.isStarted(event) && !Event.isEnded(event);
+    }
+
+    static removeEvent() {
+        return EventModel.deleteMany({});
     }
 }
 

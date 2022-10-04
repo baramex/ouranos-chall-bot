@@ -1,6 +1,6 @@
 const { ActionRowBuilder, ButtonBuilder, EmbedBuilder, ButtonStyle } = require("discord.js");
 const Event = require("../models/event.model");
-const { formatDate } = require("../service/utils");
+const { formatDate, durationTime } = require("../service/utils");
 const { options, COLORS, client } = require("../client");
 
 async function updateFlags() {
@@ -8,16 +8,17 @@ async function updateFlags() {
     if (!channel) return;
 
     const event = await Event.getEvent();
-    const valid = Event.isValid(event);
     const started = Event.isStarted(event);
+    const ended = Event.isEnded(event);
+
+    console.log(event, started, ended)
 
     const embed = new EmbedBuilder()
         .setColor(COLORS.casino)
         .setTitle(":checkered_flag: | Ouranos Chall・Flags")
         .setFooter(options.footer)
-        .setDescription(!event ? "Il n'y a aucun évènement pour le moment." : (valid ?
-            !started ? `L'évènement n'a pas encore commencé : \`${formatDate(event.start)}\`.` : `L'évènement est terminé : \`${formatDate(event.end)}\`.` : "" +
-                event?.users ? "\n" + event.users.sort((a, b) => b.flags.reduce((p, c) => p + c.points, 0) - a.flags.reduce((p, c) => p + c.points, 0)).map((a, i) => `\`#${i + 1} ${options.guild.members.cache.get(a.id)?.user.tag}\` - ${a.flags.length} flags validés - \`${a.flags.reduce((p, c) => p + c.points, 0)} points\``).join("\n") : "")
+        .setDescription(!event ? "Il n'y a aucun évènement pour le moment." : (!started ? `L'évènement n'a pas encore commencé : \`${formatDate(event.start)}\`.` : ended ? `L'évènement est terminé : \`${formatDate(event.end)}\`.` : "Évènement en cours : `" + durationTime(event.end - new Date().getTime()) + " restantes`.") +
+            (event?.users ? event.users.length > 0 ? "\n" + event.users.sort((a, b) => b.flags.reduce((p, c) => p + c.points, 0) - a.flags.reduce((p, c) => p + c.points, 0)).map((a, i) => `\`#${i + 1} ${options.guild.members.cache.get(a.id)?.user.tag}\` - ${a.flags.length} flags validés - \`${a.flags.reduce((p, c) => p + c.points, 0)} points\``).join("\n") : "\nAucun flag validé." : "")
         );
 
     const row = new ActionRowBuilder()
