@@ -4,8 +4,7 @@ const COLORS = {
     error: "FF0000",
     info: "00F2FF",
     warning: "ffc107",
-    valid: "00FF03",
-    casino: "FFD700"
+    valid: "00FF03"
 }
 
 const client = new Discord.Client({

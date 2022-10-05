@@ -11,10 +11,8 @@ async function updateFlags() {
     const started = Event.isStarted(event);
     const ended = Event.isEnded(event);
 
-    console.log(event, started, ended)
-
     const embed = new EmbedBuilder()
-        .setColor(COLORS.casino)
+        .setColor(COLORS.info)
         .setTitle(":checkered_flag: | Ouranos Chall・Flags")
         .setFooter(options.footer)
         .setDescription(!event ? "Il n'y a aucun évènement pour le moment." : (!started ? `L'évènement n'a pas encore commencé : \`${formatDate(event.start)}\`.` : ended ? `L'évènement est terminé : \`${formatDate(event.end)}\`.` : "Évènement en cours : `" + durationTime(event.end - new Date().getTime()) + " restantes`.") +
