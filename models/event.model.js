@@ -28,15 +28,15 @@ class Event {
      * @returns 
      */
     static getEvent(valid) {
-        return EventModel.findOne(valid ? { end: { $lte: new Date() }, start: { $gte: new Date() } } : {});
+        return EventModel.findOne(valid ? { end: { $gt: Date.now() }, start: { $lte: Date.now() } } : {}).populate("users.flags");
     }
 
     static isStarted(event) {
-        return event && new Date().getTime() >= event.start.getTime();
+        return event && Date.now() >= event.start.getTime();
     }
 
     static isEnded(event) {
-        return event && new Date().getTime() >= event.end.getTime();
+        return event && Date.now() > event.end.getTime();
     }
 
     static isValid(event) {

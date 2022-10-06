@@ -25,7 +25,6 @@ function formatDate(date) {
 }
 
 function convertStringToDate(date) {
-    console.log(new Date(date).toLocaleDateString("fr-FR", { timeZoneName: "short" }).split("UTC")[1], new Date().getTimezoneOffset())
     const offset = Number(new Date(date).toLocaleDateString("fr-FR", { timeZoneName: "short" }).split("UTC")[1]) + new Date().getTimezoneOffset() / 60;
     const d = new Date(date);
     if (!d || !(d instanceof Date) || isNaN(d)) return false;

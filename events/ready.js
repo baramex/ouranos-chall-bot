@@ -3,6 +3,8 @@ const Enmap = require("enmap");
 const { client, options } = require("../client");
 const fs = require("fs");
 const { updateFlags } = require("../modules/flags");
+const Event = require("../models/event.model");
+const { endEventSchedule, startEventSchedule } = require("../service/schedule");
 
 module.exports = {
     name: "ready",
@@ -41,6 +43,14 @@ module.exports = {
             });
         });
 
+        await guild.members.fetch();
         updateFlags().catch(console.error);
+
+        Event.getEvent().then(e => {
+            if (e) {
+                if (!Event.isStarted(e)) startEventSchedule(e.start);
+                if (!Event.isEnded(e)) endEventSchedule(e.end);
+            }
+        });
     }
 }

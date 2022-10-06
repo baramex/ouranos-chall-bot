@@ -1,5 +1,7 @@
 const { CommandInteraction, PermissionsBitField, ApplicationCommandOptionType } = require("discord.js");
 const Event = require("../models/event.model");
+const { updateFlags } = require("../modules/flags");
+const { endEventSchedule } = require("../service/schedule");
 const { convertStringToDate, convertStringToDuration, durationTime } = require("../service/utils");
 
 /**
@@ -14,16 +16,19 @@ module.exports.run = async (interaction) => {
 
     const start = convertStringToDate(interaction.options.get("début", true).value);
     const duration = convertStringToDuration(interaction.options.get("durée", true).value);
-    const end = new Date(new Date().getTime() + duration);
 
-    console.log(start, duration)
+    if (!start || start.getTime() <= Date.now()) throw new Error("La date de début n'est pas valide.");
 
-    if (!start || start.getTime() <= new Date().getTime()) throw new Error("La date de début n'est pas valide.");
-    else if (!duration || !end || end.getTime() <= start.getTime()) throw new Error("La durée n'est pas valide.");
+    const end = new Date(start.getTime() + duration);
+    if (!duration || !end || end.getTime() <= start.getTime()) throw new Error("La durée n'est pas valide.");
 
     await Event.create(start, end);
+    updateFlags().catch(console.error);
 
-    interaction.reply(":white_check_mark: Début de l'évènement dans **" + durationTime(start.getTime() - new Date().getTime()) + "** !");
+    startEventSchedule(start);
+    endEventSchedule(end);
+
+    interaction.reply(":white_check_mark: Début de l'évènement dans **" + durationTime(start.getTime() - Date.now()) + "** !");
 };
 
 module.exports.info = {

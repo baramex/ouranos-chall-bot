@@ -9,7 +9,8 @@ const COLORS = {
 
 const client = new Discord.Client({
     intents: [
-        Discord.GatewayIntentBits.Guilds
+        Discord.GatewayIntentBits.Guilds,
+        Discord.GatewayIntentBits.GuildMembers
     ]
 });
 client.login(process.env.BOT_TOKEN);

@@ -16,7 +16,7 @@ async function updateFlags() {
         .setTitle(":checkered_flag: | Ouranos Chall・Flags")
         .setFooter(options.footer)
         .setDescription(!event ? "Il n'y a aucun évènement pour le moment." : (!started ? `L'évènement n'a pas encore commencé : \`${formatDate(event.start)}\`.` : ended ? `L'évènement est terminé : \`${formatDate(event.end)}\`.` : "Évènement en cours : `" + durationTime(event.end - new Date().getTime()) + " restantes`.") +
-            (event?.users ? event.users.length > 0 ? "\n" + event.users.sort((a, b) => b.flags.reduce((p, c) => p + c.points, 0) - a.flags.reduce((p, c) => p + c.points, 0)).map((a, i) => `\`#${i + 1} ${options.guild.members.cache.get(a.id)?.user.tag}\` - ${a.flags.length} flags validés - \`${a.flags.reduce((p, c) => p + c.points, 0)} points\``).join("\n") : "\nAucun flag validé." : "")
+            (event?.users ? event.users.length > 0 ? "\n" + event.users.sort((a, b) => b.flags.reduce((p, c) => p + c.points, 0) - a.flags.reduce((p, c) => p + c.points, 0)).map((a, i) => `#${i + 1} __${options.guild.members.cache.get(a.id)?.user.tag}__ - **${a.flags.length}** flags validés - **${a.flags.reduce((p, c) => p + c.points, 0)}** points`).join("\n") : "\nAucun flag validé." : "")
         );
 
     const row = new ActionRowBuilder()

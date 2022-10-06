@@ -14,11 +14,13 @@ module.exports.run = async (interaction) => {
     if (!await Event.getEvent()) throw new Error("Il n'y a aucun évènement.");
 
     await Event.removeEvent();
+    updateFlags().catch(console.error);
+    cancelEventsSchedule();
 
     interaction.reply(":white_check_mark: L'évènement a été supprimé !");
 };
 
 module.exports.info = {
-    name: "start-event",
+    name: "delete-event",
     description: "permet de supprimer l'évènement le plus récent."
 };
